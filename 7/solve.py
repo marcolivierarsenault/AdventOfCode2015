@@ -1,11 +1,13 @@
 import re
-code = dict({}) 
-anwser = dict({}) 
+input = dict({}) 
+originalInput = dict({}) 
+
 
 with open("input.txt") as textFile:
     for line in textFile:
         values = line.strip().split(' -> ')
-        code.update({values[1]:values[0]})
+        input.update({values[1]:values[0]})
+originalInput = input.copy()
 
 def search(n):
     if n.isdigit():
@@ -35,16 +37,23 @@ def search(n):
         else:
             return search(original)
 
+def resolveDic(code):
+    anwser = dict({}) 
+    while len(code)>0:
+        newDict = code.copy()
+        for k, v in code.iteritems():
+             if re.search(r'^\d+ (AND|OR|LSHIFT|RSHIFT) \d+$',v) or re.search(r'^\d+$',v) or re.search(r'^NOT \d+$',v):
+                val = eval(search(v))
+                anwser[k] = val
+                newDict.pop(k)
+                for kk, vv in newDict.iteritems():
+                    newDict[kk] = re.sub(r'\b%s\b' % k, str(val), vv)
+        code=newDict.copy()
+    return anwser
 
-while len(code)>0:
-    newDict = code.copy()
-    for k, v in code.iteritems():
-         if re.search(r'^\d+ (AND|OR|LSHIFT|RSHIFT) \d+$',v) or re.search(r'^\d+$',v) or re.search(r'^NOT \d+$',v):
-            val = eval(search(v))
-            anwser[k] = val
-            newDict.pop(k)
-            for kk, vv in newDict.iteritems():
-                newDict[kk] = re.sub(r'\b%s\b' % k, str(val), vv)
-    code=newDict.copy()
+a1 = resolveDic(input)['a']
+originalInput['b'] = str(a1)
+a2 = resolveDic(originalInput)['a']
 
-print "The value of A is: ", anwser['a']
+print "Q1: The value of A is: ", a1
+print "Q2: The value of A is: ", a2
