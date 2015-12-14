@@ -40,19 +40,19 @@ for i,n in enumerate(endTable):
 			endTable[i].append(endTable[i][1])
 #print endTable
 
-#Faut que je calcul l'erreur des deux coté
 worstTable = []
 for i,n in enumerate(endTable):
-	worst = 0
+	worst = 999
 	for ii,elem in enumerate(n[1:]):
 		for new in table:
 			if n[ii] == new[2] and n[ii+1] == new[1]:
 				endTable[i][0] += new[0]
-				if worst > int(new[0]):
-					worst = new[0]
-			if n[ii] == new[1] and n[ii+1] == new[2]:
-				if worst > int(new[0]):
-					worst = new[0]
+				tt = int(new[0])
+				for lookBack in table:
+					if n[ii] == lookBack[1] and n[ii+1] == lookBack[2]:
+						tt += int(lookBack[0])
+						if (worst > tt):
+							worst = tt
 	worstTable.append(endTable[i][0] - worst)
 
 print "The best karma is ", max(endTable)[0]
