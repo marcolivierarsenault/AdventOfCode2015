@@ -3,7 +3,7 @@ import re
 difference = 0
 differenceQ2 = 0
 
-with open("input2.txt") as textFile:
+with open("input.txt") as textFile:
     for line in textFile:
         difference += 2
         differenceQ2 += 2
